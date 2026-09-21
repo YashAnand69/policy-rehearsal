@@ -19,7 +19,6 @@ import {
   X,
 } from "lucide-react";
 import {
-  compare,
   formatVerdict,
   makeRules,
   parseActions,
@@ -27,6 +26,8 @@ import {
   type Verdict,
 } from "./engine";
 import { fixtures } from "./fixtures";
+import { runRegression, type RehearsalBundle } from "./regression";
+import { ReleaseChecks } from "./ReleaseChecks";
 const baseline = makeRules(500);
 const download = (name: string, value: unknown) => {
   const url = URL.createObjectURL(
@@ -77,10 +78,18 @@ export default function App() {
     () => makeRules(run.threshold, run.block),
     [run.threshold, run.block],
   );
-  const rows = useMemo(
-    () => compare(run.actions, baseline, candidate),
-    [run.actions, candidate],
+  const bundle: RehearsalBundle = useMemo(
+    () => ({
+      schemaVersion: 1,
+      model: "rehearsal-local-v1",
+      baseline: { threshold: 500, blockProduction: true },
+      candidate: { threshold: run.threshold, blockProduction: run.block },
+      actions: run.actions,
+    }),
+    [run.threshold, run.block, run.actions],
   );
+  const regression = useMemo(() => runRegression(bundle), [bundle]);
+  const rows = regression.comparisons;
   const changed = rows.filter((r) => r.changed),
     newly = rows.filter((r) => r.newlyAllowed);
   const detail = rows.find((r) => r.action.id === selected) ?? rows[0];
@@ -168,8 +177,15 @@ export default function App() {
         humanReviewsAfter: afterAsks,
       },
       comparisons: rows,
+      regression: {
+        passed: regression.passed,
+        guardrails: regression.guardrails,
+        relaxations: regression.relaxations.map((row) => row.action.id),
+      },
     });
-    setNotice("Report prepared with the exact compared rules and fixtures. Check your browser downloads.");
+    setNotice(
+      "Report prepared with the exact compared rules and fixtures. Check your browser downloads.",
+    );
   }
   return (
     <div className="shell">
@@ -418,6 +434,15 @@ export default function App() {
                       Relax · $1,000
                     </button>
                   </div>
+                  <button
+                    className="baseline-preset"
+                    onClick={() => {
+                      setThreshold("500");
+                      setBlock(true);
+                    }}
+                  >
+                    Restore baseline settings
+                  </button>
                   <div className="rule-separator" />
                   <label className="switch-row">
                     <span>
@@ -557,6 +582,16 @@ export default function App() {
                   </div>
                 </div>
               </section>
+              <ReleaseChecks
+                result={regression}
+                stale={stale}
+                onExport={() => {
+                  download("rehearsal-ci.json", bundle);
+                  setNotice(
+                    "CI bundle prepared. Run it with the repository CLI to reproduce these checks.",
+                  );
+                }}
+              />
               <section className="review-section">
                 <div className="section-heading">
                   <div>

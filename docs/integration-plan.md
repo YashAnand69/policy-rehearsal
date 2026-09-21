@@ -11,7 +11,7 @@ A five-working-day target after access and evaluation contract are available:
 1. Confirm users, rule semantics, allowed fixture fields, and an acceptance dataset with Aadil.
 2. Add a read-only comparison endpoint around Pushary's authoritative evaluator. Candidate and baseline must be immutable snapshots; no notification, approval, permit consumption, or actual tool execution.
 3. Adapt the React surface to Pushary's existing component system and authenticated workspace boundaries.
-4. Add reproducible report export, parity tests, and relevant accessibility/interaction checks.
+4. Add reproducible report export, parity tests, and relevant accessibility/interaction checks. Treat a production CI gate as an optional follow-on unless it fits the agreed pilot.
 5. Demo against agreed fixtures and hand over a reviewed PR, tests, and maintenance notes.
 
 If there is no candidate-evaluation boundary yet, begin with a smaller paid contract-design spike; do not silently grow a five-day frontend pilot into a new policy engine.
@@ -37,3 +37,7 @@ Policy-engine replacement, notification delivery, phone UI, billing, marketplace
 ## Discovery measure
 
 Observe whether a reviewer can explain all changed decisions and identify one unintended allow in a seeded comparison. Then measure review time and corrections during a small trial. No conversion, safety, or support reduction is claimed from synthetic fixtures.
+
+## Regression demonstration added
+
+The prototype now includes ten authored contracts and a browser-to-CLI bundle. The strict local check fails on contract mismatches or any less-restrictive verdict. It captures deny-to-human changes as well as newly allowed actions. No approval or baseline promotion is automated. Production use requires authoritative evaluator parity, trusted versioned baselines, agreed expectations, and sanitized CI artifacts; the current bundles are unsigned.

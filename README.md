@@ -13,7 +13,9 @@ An independent React/TypeScript product prototype by [Yash Anand](https://github
 3. Inspect **$500 refund**. The trace shows the allow rule matches while the proposed approval threshold does not.
 4. Choose **Tighten · $250**, then **Run comparison**. Two previously allowed actions now require a human.
 5. Inspect the missing-amount and numeric-string cases: both still ask a human. Disable the production block and rerun to see a deny become a human review.
-6. **Export report** downloads the compared policies, fixtures, per-rule traces, and summary. **Get sample** gives you the JSON import format.
+6. Open **Inspect contract checks**: ten expectations cover missing facts, type errors, the refund ceiling, and threshold boundaries. The default change passes these cases but fails the strict no-relaxation check.
+7. Use **Restore baseline settings**, then rerun: the local gate passes. Disable the production guard and rerun: its contract fails and the deny-to-human relaxation is flagged.
+8. **Export report** downloads the compared policies, fixtures, per-rule traces, and summary. **Get sample** gives you the JSON import format.
 
 No signup, API key, backend, or phone pairing is needed. No actions are executed. Imports stay in memory in your browser; refresh clears them.
 
@@ -29,7 +31,7 @@ npm run dev
 Open the local address printed by Vite (normally `http://127.0.0.1:5173`).
 
 ```sh
-npm test       # 11 meaningful policy/import cases
+npm test       # 19 policy, import, regression, and CLI tests
 npm run build # TypeScript check + static production bundle
 npm run preview
 ```
@@ -43,7 +45,33 @@ The static `dist/` directory can be hosted on Netlify or another static host. `n
 - Changed/newly-allowed filters, text search, and a per-rule decision inspector.
 - Report export tied to the last completed comparison; stale edits disable export.
 - Validated JSON import, reset, empty/error states, keyboard controls, and responsive layouts.
+- Ten authored regression expectations, including threshold-boundary probes.
+- CI bundle export and a CLI that recomputes results with the same model.
+- Strict detection of all less-restrictive verdicts, including deny → human.
 - Evidence and scope view inside the demo.
+
+## Reproduce a review in CI
+
+In the demo, click **Export CI bundle** after running a comparison. Use the actual downloaded filename (it includes a timestamp):
+
+```sh
+npm run check:policy -- /path/to/rehearsal-ci-123.json result.json
+```
+
+Exit status: **0** = these local checks passed, **1** = a contract failed or a verdict became less restrictive, **2** = invalid input. The optional second argument writes full JSON results and traces. The input pins the local model version, both configurations, and the exact fixture set. It is a prototype schema, not a Pushary export.
+
+Included examples:
+
+```sh
+npm run check:policy -- examples/baseline-ci.json # exits 0
+npm run check:policy -- examples/relaxed-ci.json  # intentionally exits 1
+```
+
+The ten demo contracts are authored separately from observed results and always run, even if imported fixtures omit those cases. They are **not an exhaustive security specification**. Boundary probes use the candidate threshold; fixed contracts protect production deployment denial and the $10,000 ceiling.
+
+The strict gate rejects every relaxation. Intentional relaxations require human review outside this prototype; there is no approval button or bypass flag. Changing the baseline can change the result, so production baselines and acceptance contracts must come from a trusted, versioned source with branch protection. Bundles are unsigned and local data is user-editable. Passing neither certifies safety nor triggers deployment.
+
+The repository workflow runs both unit tests and the passing example. CLI integration tests also prove the intentionally failing example exits 1. To check an exported candidate in another CI pipeline, install this repository and invoke the command above, allowing its status to fail the job.
 
 ## What this model means
 
@@ -66,6 +94,11 @@ Pushary already has policies, approval-history suggestions, audit exports, frame
 - `src/engine.ts` — pure bounded evaluator, comparison, and import validation.
 - `src/engine.test.ts` — edge cases and invariants.
 - `src/fixtures.ts` — invented action examples; no customer data.
+- `src/regression.ts` — authored contract cases, no-relaxation gate, and bundle validation.
+- `src/regression.test.ts` — regression detection and real CLI exit-code checks.
+- `src/ReleaseChecks.tsx` — contract results and CI handoff.
+- `scripts/check-policy.ts` — CI runner, with optional JSON result output.
+- `examples/` — reproducible passing and intentionally failing bundles.
 - `src/App.tsx` — workflow and report export.
 - `src/style.css` — original responsive styling; no Pushary assets copied.
 

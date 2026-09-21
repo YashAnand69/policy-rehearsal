@@ -13,4 +13,5 @@ jobs:
           cache: npm
       - run: npm ci --include=optional
       - run: npm test
+      - run: npm run check:policy -- examples/baseline-ci.json
       - run: npm run build

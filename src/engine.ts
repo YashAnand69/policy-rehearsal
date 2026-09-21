@@ -225,11 +225,12 @@ export function parseActions(text: string): Action[] {
     if (
       Object.values(item.parameters).some(
         (v) =>
-          v !== null && !["string", "number", "boolean"].includes(typeof v),
+          (v !== null && !["string", "number", "boolean"].includes(typeof v)) ||
+          (typeof v === "number" && !Number.isFinite(v)),
       )
     )
       throw new Error(
-        "Parameter values must be strings, numbers, booleans or null.",
+        "Parameter values must be strings, finite numbers, booleans or null.",
       );
     if (
       item.note !== undefined &&

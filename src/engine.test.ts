@@ -93,6 +93,11 @@ test("import rejects duplicate ids, nested values, invalid labels, oversized set
     Array(501).fill(action(1)),
   ])
     assert.throws(() => parseActions(JSON.stringify(data)));
+  assert.throws(() =>
+    parseActions(
+      '[ {"id":"overflow","label":"Overflow","toolName":"refund.create","parameters":{"amount":1e309}} ]',
+    ),
+  );
   assert.throws(() => parseActions("{bad json"));
   assert.throws(() => parseActions(" ".repeat(200001)));
 });

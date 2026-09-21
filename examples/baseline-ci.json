@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "model": "rehearsal-local-v1",
+  "baseline": {
+    "threshold": 500,
+    "blockProduction": true
+  },
+  "candidate": {
+    "threshold": 500,
+    "blockProduction": true
+  },
+  "actions": [
+    {
+      "id": "evt_001",
+      "label": "$42 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 42,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_002",
+      "label": "$120 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 120,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_003",
+      "label": "$480 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 480,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_004",
+      "label": "$499 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 499,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_005",
+      "label": "$500 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 500,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_006",
+      "label": "$650 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 650,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_007",
+      "label": "$899 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 899,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_008",
+      "label": "$999 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 999,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_009",
+      "label": "$1,000 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 1000,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_010",
+      "label": "$4,200 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 4200,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_011",
+      "label": "$10,000 refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 10000,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "evt_012",
+      "label": "Amount missing",
+      "toolName": "refund.create",
+      "parameters": {
+        "currency": "USD"
+      },
+      "note": "A missing amount must not silently bypass a threshold."
+    },
+    {
+      "id": "evt_013",
+      "label": "Amount sent as text",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": "600",
+        "currency": "USD"
+      },
+      "note": "The string \"600\" is deliberately not coerced into a number."
+    },
+    {
+      "id": "evt_014",
+      "label": "Unrecognized currency",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": 42,
+        "currency": "EUR"
+      },
+      "note": "No matching allow rule for this currency."
+    },
+    {
+      "id": "evt_015",
+      "label": "Production deployment",
+      "toolName": "deployment.create",
+      "parameters": {
+        "environment": "production",
+        "repository": "demo/checkout"
+      }
+    },
+    {
+      "id": "evt_016",
+      "label": "Staging deployment",
+      "toolName": "deployment.create",
+      "parameters": {
+        "environment": "staging",
+        "repository": "demo/checkout"
+      }
+    },
+    {
+      "id": "evt_017",
+      "label": "Delete repository",
+      "toolName": "repository.delete",
+      "parameters": {
+        "repository": "demo/checkout"
+      },
+      "note": "Unconfigured actions require a human; they are never implicitly allowed."
+    },
+    {
+      "id": "evt_018",
+      "label": "Negative refund",
+      "toolName": "refund.create",
+      "parameters": {
+        "amount": -1,
+        "currency": "USD"
+      }
+    }
+  ]
+}
