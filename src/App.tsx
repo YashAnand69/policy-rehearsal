@@ -34,9 +34,12 @@ const download = (name: string, value: unknown) => {
   );
   const a = document.createElement("a");
   a.href = url;
-  a.download = name;
+  a.download = name.replace(".json", `-${Date.now()}.json`);
+  a.style.display = "none";
+  document.body.appendChild(a);
   a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
 };
 function Badge({ verdict }: { verdict: Verdict }) {
   return (
@@ -166,7 +169,7 @@ export default function App() {
       },
       comparisons: rows,
     });
-    setNotice("Report downloaded with the exact compared rules and fixtures.");
+    setNotice("Report prepared with the exact compared rules and fixtures. Check your browser downloads.");
   }
   return (
     <div className="shell">
