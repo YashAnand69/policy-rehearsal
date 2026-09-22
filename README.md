@@ -17,7 +17,7 @@ An independent React/TypeScript product prototype by [Yash Anand](https://github
 7. Use **Restore baseline settings**, then rerun: the local gate passes. Disable the production guard and rerun: its contract fails and the deny-to-human relaxation is flagged.
 8. **Export report** downloads the compared policies, fixtures, per-rule traces, and summary. **Get sample** gives you the JSON import format.
 
-No signup, API key, backend, or phone pairing is needed. No actions are executed. Imports stay in memory in your browser; refresh clears them.
+No signup, API key, backend, or phone pairing is needed. No actions are executed. Imports stay in memory in your browser; refresh clears them...
 
 ## Run locally
 
